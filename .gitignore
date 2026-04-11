@@ -205,3 +205,40 @@ cython_debug/
 marimo/_static/
 marimo/_lsp/
 __marimo__/
+
+
+# Dataset files (too large for GitHub)
+train/
+val/
+test/
+*.parquet
+
+# Cache and model files
+hf_cache/
+deberta_classifier/
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+
+# Numpy cache files
+*.npy
+
+# Trained model weights
+*.pt
+*.pkl
+
+# Results (keep these)
+# baseline_results.json  ← DO commit this
+# all_results.json       ← DO commit this
+
+# Environment
+.env
+venv/
+*.egg-info/
+
+# Plots (optional — can re-generate)
+*.png
+
+# Logs
+logs/
+runs/
