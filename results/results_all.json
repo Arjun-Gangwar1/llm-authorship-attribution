@@ -1,0 +1,99 @@
+{
+  "Mini: TF-IDF + NaiveBayes": {
+    "accuracy": 0.415303,
+    "accuracy_pct": 41.53,
+    "stage": "mini",
+    "saved_path": "/kaggle/working/models/mini_tfidf_nb.pkl"
+  },
+  "Mini: TF-IDF + LogReg": {
+    "accuracy": 0.626368,
+    "accuracy_pct": 62.64,
+    "stage": "mini",
+    "saved_path": "/kaggle/working/models/mini_tfidf_lr.pkl"
+  },
+  "Mini: TF-IDF + LinearSVM": {
+    "accuracy": 0.626971,
+    "accuracy_pct": 62.7,
+    "stage": "mini",
+    "saved_path": "/kaggle/working/models/mini_tfidf_svm.pkl"
+  },
+  "Mini: LR + MiniLM + Stylo": {
+    "accuracy": 0.383974,
+    "accuracy_pct": 38.4,
+    "stage": "mini",
+    "saved_path": "/kaggle/working/models/mini_lr_minilm.pkl"
+  },
+  "Mini: LR + MPNet + Stylo": {
+    "accuracy": 0.410684,
+    "accuracy_pct": 41.07,
+    "stage": "mini",
+    "saved_path": "/kaggle/working/models/mini_lr_mpnet.pkl"
+  },
+  "Mini: LR + BGE-base + Stylo": {
+    "accuracy": 0.440807,
+    "accuracy_pct": 44.08,
+    "stage": "mini",
+    "saved_path": "/kaggle/working/models/mini_lr_bge-base.pkl"
+  },
+  "Mini: LightGBM + BGE-base + Stylo": {
+    "accuracy": 0.608796,
+    "accuracy_pct": 60.88,
+    "stage": "mini",
+    "saved_path": "/kaggle/working/models/mini_lgbm_best.pkl"
+  },
+  "Mini: DeBERTa-base": {
+    "accuracy": 0.08294,
+    "accuracy_pct": 8.29,
+    "stage": "mini",
+    "saved_path": "/kaggle/working/models/mini_deberta_best.pt"
+  },
+  "Mini: Ensemble (DeBERTa(65%) + LGBM(25%) + SVM(10%))": {
+    "accuracy": 0.08294,
+    "accuracy_pct": 8.29,
+    "stage": "mini",
+    "saved_path": "N/A \u2014 computed at runtime"
+  },
+  "Full: TF-IDF + LinearSVM": {
+    "accuracy": 0.787073,
+    "accuracy_pct": 78.71,
+    "stage": "full",
+    "saved_path": "/kaggle/working/models/full_tfidf_svm.pkl"
+  },
+  "Full: TF-IDF + NaiveBayes": {
+    "val_acc": 43.65, "test_acc": 43.34, "macro_f1": 0.4136,
+    "stage": "full_kaggle", "notes": "796k train, 49.8k test"
+  },
+  "Full: TF-IDF + LogReg": {
+    "val_acc": 76.96, "test_acc": 76.73, "macro_f1": 0.7658,
+    "stage": "full_kaggle", "notes": "796k train, 49.8k test"
+  },
+  "Full: TF-IDF + LinearSVM (real test)": {
+    "val_acc": 78.29, "test_acc": 78.40, "macro_f1": 0.7821,
+    "stage": "full_kaggle", "notes": "796k train, 49.8k test — BEST CLASSICAL",
+    "per_class_f1": {
+      "chatgpt": 0.873, "cohere": 0.736, "cohere-chat": 0.726,
+      "gpt2": 0.743, "gpt3": 0.797, "gpt4": 0.898,
+      "human": 0.823, "llama-chat": 0.873, "mistral": 0.646,
+      "mistral-chat": 0.768, "mpt": 0.730, "mpt-chat": 0.773
+    }
+  },
+  "Full: E5-base + MLP": {
+    "val_acc": 59.73, "test_acc": 59.61, "macro_f1": null,
+    "stage": "full_kaggle", "notes": "796k train, 49.8k test, 15 epochs"
+  },
+  "Full: DeBERTa-v3-base": {
+    "val_acc": 8.29, "test_acc": 8.29, "macro_f1": 0.0128,
+    "stage": "abandoned", "notes": "NaN collapse across 3 configs on T4 (fp16, DataParallel, gradient_checkpointing). Replaced by RoBERTa."
+  },
+  "Full: RoBERTa-base": {
+    "val_acc": 86.52, "test_acc": 86.51, "macro_f1": 0.8654,
+    "stage": "full_kaggle", "notes": "796k train, 49.8k test, 3 epochs, fp16, single GPU, ~9h — BEST MODEL",
+    "per_class_f1": {
+      "chatgpt": 0.868, "cohere": 0.899, "cohere-chat": 0.810,
+      "gpt2": 0.873, "gpt3": 0.943, "gpt4": 0.896,
+      "human": 0.893, "llama-chat": 0.876, "mistral": 0.832,
+      "mistral-chat": 0.803, "mpt": 0.857, "mpt-chat": 0.835
+    },
+    "epoch_progression": {"epoch1": 81.39, "epoch2": 85.45, "epoch3": 86.52}
+  }
+}
