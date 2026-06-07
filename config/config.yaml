@@ -1,0 +1,43 @@
+# src/config/config.yaml
+project:
+  name: "llm-text-classifier"
+  random_seed: 42
+  classes:
+    - gpt2
+    - llama-chat
+    - human
+    - chatgpt
+    - mistral
+    - gpt4
+    - mpt-chat
+    - mistral-chat
+    - gpt3
+    - mpt
+    - cohere-chat
+    - cohere
+
+data:
+  train_path: "data/raw/train/train.parquet"
+  val_path:   "data/raw/val/val.parquet"
+  test_path:  "data/raw/test/test.parquet"
+  mini_n_per_class: 500        # For fast debugging
+  full_n_per_class: 80000      # For final training
+
+embeddings:
+  model: "all-MiniLM-L6-v2"   # Start fast, upgrade later
+  batch_size: 64
+  max_length: 512
+  cache_dir: "hf_cache"
+
+deberta:
+  model_name: "microsoft/deberta-v3-base"
+  max_length: 512
+  batch_size: 16
+  grad_accum: 2
+  num_epochs: 5
+  learning_rate: 2.0e-5
+  warmup_ratio: 0.1
+  weight_decay: 0.01
+  label_smoothing: 0.05
+  output_dir: "models/deberta_classifier"
+  cache_dir: "hf_cache"
