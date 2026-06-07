@@ -1,7 +1,9 @@
 # LLM Authorship Attribution — 12-Class Text Classification
 
 > Given a raw text string, identify which of **12 LLMs (or a human)** wrote it.
-> Built for **CS204T: Artificial Intelligence** at IIT Dharwad as a 4-member team project.
+> Fine-tuned RoBERTa reaches **86.5% test accuracy** on 796,800 training samples.
+
+Built for **CS204T: Artificial Intelligence**, IIT Dharwad (team project — see [my role](#my-role-arjun-gangwar) and [acknowledgments](#acknowledgments)).
 
 ---
 
@@ -16,7 +18,7 @@
 
 ---
 
-## Results (Verified — Test Set, 49,800 rows)
+## Results (Verified — Held-out Test Set, 49,800 rows)
 
 | Model | Val Acc | Test Acc | Macro F1 | Train Time | Hardware |
 |---|---|---|---|---|---|
@@ -27,66 +29,30 @@
 | TF-IDF + Naive Bayes | 43.65% | 43.34% | 0.414 | ~5 sec | CPU only |
 | DeBERTa-v3-base | 8.29% | 8.29% | 0.013 | — | abandoned (NaN) |
 
-*(All measured on the held-out test set, 796,800 train / 49,800 val / 49,800 test.)*
-
 > **Key findings:**
 > 1. **RoBERTa-base wins at 86.5%** — a fine-tuned transformer beats every classical method by 8+ points.
 > 2. **TF-IDF + SVM is the best non-GPU model (78.4%)** — authorship signals are largely surface/lexical
 >    (phrasing, punctuation, formatting), which TF-IDF captures directly and cheaply.
 > 3. **Easiest classes:** gpt3 (F1 0.94), cohere (0.90). **Hardest:** the `*-chat` vs base pairs
 >    (mistral-chat 0.80, cohere-chat 0.81) — a model and its chat-tuned variant write similarly.
-> 4. **DeBERTa-v3 was abandoned** after NaN collapse across 3 configs — see "The Transformer Story" below.
 
 ---
 
-## Quick Start
+## My Role (Arjun Gangwar)
 
-```bash
-git clone https://github.com/ItzCobaltboy/llm-classifier
-cd llm-classifier
-pip install -r requirements.txt
-```
+This was a team project; my primary contributions were:
 
-**Run smoke test on demo data (no GPU, < 60 seconds):**
-```bash
-python scripts/01_smoke_test.py
-```
-
-**Train on full data** (requires RAID dataset download — see `data/README.md`):
-```bash
-python scripts/02_train_classical.py     # TF-IDF + SVM/LR/NB — best classical
-python scripts/03_train_embeddings.py    # E5/BGE + MLP/LightGBM
-python scripts/04_train_deberta.py       # DeBERTa fine-tune (GPU required)
-```
+- **Exploratory Data Analysis** — class distributions, word-count outliers, the base-vs-chat confusion analysis ([`notebooks/01_eda.ipynb`](notebooks/01_eda.ipynb)).
+- **TF-IDF classical pipeline** — NaiveBayes / LogReg / Linear SVM; the SVM baseline reached **78.4%** ([`notebooks/04_main_pipeline.ipynb`](notebooks/04_main_pipeline.ipynb)).
+- **The winning transformer** — fine-tuned **RoBERTa-base to 86.5%** test accuracy, the project's best result ([`notebooks/07_roberta_finetune.ipynb`](notebooks/07_roberta_finetune.ipynb)).
+- **Transformer debugging** — diagnosed why DeBERTa-v3 collapsed to NaN across 3 GPU configs (see below) and made the call to switch to RoBERTa.
+- **Embedding caching + full Kaggle pipeline** — BGE/MiniLM/MPNet caches and the end-to-end training/eval run on the full 796K dataset.
 
 ---
 
-## Project Structure
+## The Transformer Story (My Best Technical Narrative)
 
-```
-├── deberta_finetune_FIXED.py      ← DeBERTa fix (fp16 bug — see below)
-├── llm-generated-text-2.ipynb     ← Main pipeline notebook (full outputs)
-├── src/                           ← All source modules
-│   ├── features/stylometric.py    ← 40 hand-crafted authorship features
-│   ├── models/                    ← classical, deep, transformer trainers
-│   └── evaluation/metrics.py      ← full metrics suite
-├── TF-IDF/results/                ← Saved models + verified results JSON
-├── llm_sbert_complete/            ← 46-run SBERT experiment grid + results
-├── notebooks/                     ← Structured 10-notebook series
-├── Final Codes/                   ← Ayush's TF-IDF+MLP (~80% F1)
-├── my_messy_kitchen/cook_here/    ← 36-run DeBERTa grid + 3 production pipelines
-├── Data_cleaning/                 ← 8 data-cleaning strategy scripts
-├── deployment/                    ← Gradio demo + FastAPI endpoint
-└── data/
-    ├── demo/                      ← Small + medium subsets (pipeline testing)
-    └── full/ → LLM_12_class/raid/ ← Real dataset (gitignored)
-```
-
----
-
-## The Transformer Story (Our Best Technical Narrative)
-
-We first attempted **DeBERTa-v3-base**, which collapsed to **8.29% accuracy** (= random, 1/12 classes)
+I first attempted **DeBERTa-v3-base**, which collapsed to **8.29% accuracy** (= random, 1/12 classes)
 across **three separate configurations** on Kaggle T4 hardware:
 
 | Config tried | Failure mode |
@@ -95,9 +61,9 @@ across **three separate configurations** on Kaggle T4 hardware:
 | fp32 + DataParallel (2× T4) | forward-pass gather corruption → 24,899/24,900 steps NaN |
 | fp32 + single GPU + gradient_checkpointing | recomputation instability → 149,398 NaN batches |
 
-We added every standard safeguard — finite-gradient guards, conservative LR, loss-NaN skipping,
+I added every standard safeguard — finite-gradient guards, conservative LR, loss-NaN skipping,
 fp32 precision — and DeBERTa-v3 *still* would not train stably on free hardware. Rather than burn
-further compute chasing a fragile model, we made the engineering decision to switch to **RoBERTa-base**.
+further compute chasing a fragile model, I made the engineering decision to switch to **RoBERTa-base**.
 
 **RoBERTa trained cleanly on the first attempt** — stable fp16, smooth convergence, no NaN:
 
@@ -108,23 +74,63 @@ further compute chasing a fragile model, we made the engineering decision to swi
 | 3 | 0.279 | 0.423 | **86.52%** |
 
 Final: **86.51% test accuracy, 0.865 macro-F1.** The lesson — *model stability on your actual hardware
-matters more than picking the theoretically-best architecture* — is itself the most valuable takeaway.
-
-Notebook: [`kaggle/kaggle_roberta.ipynb`](kaggle/kaggle_roberta.ipynb)
+matters more than picking the theoretically-best architecture* — is the most valuable takeaway.
 
 ---
 
-## Team
+## Quick Start
 
-| Member | Contribution |
-|---|---|
-| Arjun Gangwar | EDA, TF-IDF pipeline, embedding caching (BGE/MiniLM/MPNet), transformer training (DeBERTa diagnosis + RoBERTa 86.5%), full Kaggle pipeline |
-| Ayush Yadav | Data-cleaning suite (8 strategies), TF-IDF+MLP (~80% F1), 36-run DeBERTa grid search, RoBERTa/DistilBERT trainers, 3 production pipelines |
-| Affan | Embedding pipeline (Qwen3/MiniLM/BERT/E5), DNN + CNN architectures, 16-run grid |
-| Aaditya | 10-notebook structured series, DistilBERT HF Trainer, evaluate + predict scripts |
+```bash
+git clone https://github.com/Arjun-Gangwar1/llm-authorship-attribution
+cd llm-authorship-attribution
+pip install -r requirements.txt
+```
+
+**Smoke-test the pipeline on the bundled demo data (no GPU, < 60 seconds):**
+```bash
+python scripts/01_smoke_test.py
+```
+
+**Train on the full dataset** (download RAID first — see [`data/README.md`](data/README.md)):
+```bash
+python scripts/pipeline2_tfidf_sklearn.py   # TF-IDF classical models (CPU)
+python scripts/pipeline1_mpnet_svm.py       # sentence-embedding + SVM
+# RoBERTa fine-tune (GPU): run notebooks/07_roberta_finetune.ipynb on Kaggle/Colab
+```
+
+---
+
+## Project Structure
+
+```
+├── README.md, MASTER_PLAN.md, LICENSE
+├── src/                    ← source package
+│   ├── data/               ← unified loader, cleaning suite, preprocessing
+│   ├── features/           ← stylometric (40 feats), TF-IDF, embeddings
+│   ├── models/             ← classical, deep (DNN/CNN), DeBERTa fix
+│   ├── training/           ← trainers + utilities
+│   └── evaluation/         ← metrics + plots
+├── notebooks/              ← EDA, main pipeline, RoBERTa, transformer experiments
+├── scripts/                ← smoke test + training pipelines
+├── deployment/             ← Gradio demo + FastAPI endpoint
+├── huggingface_space/      ← live demo app (Hugging Face Space)
+├── results/                ← results_all.json, master_results.csv, plots
+├── config/config.yaml      ← configuration
+└── data/demo/              ← small dataset for out-of-box smoke testing
+```
 
 ---
 
 ## Stack
 
 PyTorch · HuggingFace Transformers · scikit-learn · LightGBM · sentence-transformers · Gradio · FastAPI · pandas · SHAP
+
+---
+
+## Acknowledgments
+
+Team project for CS204T (IIT Dharwad). Teammates contributed complementary components:
+**Ayush Yadav** (data-cleaning suite, TF-IDF + MLP, DeBERTa/RoBERTa/DistilBERT grid scripts),
+**Affan** (sentence-embedding pipeline, DNN/CNN architectures), and
+**Aaditya** (DistilBERT HF Trainer, structured notebook scaffold).
+The EDA, TF-IDF pipeline, and the winning RoBERTa fine-tune are my own work.
