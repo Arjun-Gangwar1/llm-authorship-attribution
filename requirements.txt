@@ -1,0 +1,42 @@
+# =============================================================================
+# LLM TEXT CLASSIFICATION PROJECT — REQUIREMENTS & SETUP GUIDE
+# =============================================================================
+# Save this file as: requirements.txt
+# Run: pip install -r requirements.txt
+
+# Core data science
+pandas>=2.0.0
+numpy>=1.24.0
+pyarrow>=12.0.0          # For reading .parquet files
+
+# Visualization
+matplotlib>=3.7.0
+seaborn>=0.12.0
+
+# Traditional ML
+scikit-learn>=1.3.0
+
+# Gradient boosting
+lightgbm>=4.0.0
+xgboost>=1.7.0
+
+# Neural embeddings (sentence transformers)
+sentence-transformers>=2.2.0
+
+# Deep learning
+torch>=2.0.0
+torchvision>=0.15.0
+
+# HuggingFace transformer models
+transformers>=4.35.0
+datasets>=2.14.0
+accelerate>=0.24.0       # For distributed training / fp16
+sentencepiece>=0.1.99    # For DeBERTa tokenizer
+
+# Text analysis
+textstat>=0.7.0          # Readability scores
+nltk>=3.8.0              # Tokenization, stopwords
+
+# Optional but recommended
+protobuf>=3.20.0
+tokenizers>=0.14.0
