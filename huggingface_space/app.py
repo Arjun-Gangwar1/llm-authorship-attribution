@@ -16,16 +16,14 @@ import torch.nn.functional as F
 from transformers import AutoTokenizer, AutoModelForSequenceClassification
 
 # ── CONFIG ───────────────────────────────────────────────────────────────────
-# After you upload the model to the HF Hub (Step 3 in the guide), set this to
-# "<your-username>/llm-authorship-roberta". Until then it falls back to a fresh
-# roberta-base (which will give random predictions — upload your model first!).
-HF_MODEL_REPO = os.environ.get("HF_MODEL_REPO", "roberta-base")
+# The fine-tuned model is pulled from the HF Hub at startup.
+HF_MODEL_REPO = os.environ.get("HF_MODEL_REPO", "ArjunGangwar1/llm-authorship-roberta")
 
 CLASSES = ['chatgpt', 'cohere', 'cohere-chat', 'gpt2', 'gpt3', 'gpt4',
            'human', 'llama-chat', 'mistral', 'mistral-chat', 'mpt', 'mpt-chat']
 
 DESCRIPTIONS = {
-    'chatgpt':      'OpenAI ChatGPER — conversational, hedged, polished',
+    'chatgpt':      'OpenAI ChatGPT — conversational, hedged, polished',
     'cohere':       'Cohere base — creative / long-form',
     'cohere-chat':  'Cohere chat-tuned — concise summaries',
     'gpt2':         'GPT-2 — Wikipedia-style factual prose',
@@ -109,10 +107,10 @@ with gr.Blocks(title="LLM Authorship Attribution", theme=gr.themes.Soft()) as de
     gr.Examples(EXAMPLES, inputs=txt)
     gr.Markdown(
         "---\n"
-        "Built for CS204T (AI), IIT Dharwad · "
-        "[GitHub repo](https://github.com/YOUR_USERNAME/llm-authorship-attribution) · "
-        "Model: fine-tuned `roberta-base`"
+        "[GitHub repo](https://github.com/Arjun-Gangwar1/llm-authorship-attribution) · "
+        "[Model](https://huggingface.co/ArjunGangwar1/llm-authorship-roberta) · "
+        "fine-tuned `roberta-base` (86.5% test accuracy)"
     )
 
 if __name__ == "__main__":
-    demo.launch()
+    demo.launch(server_name="0.0.0.0", server_port=7860)

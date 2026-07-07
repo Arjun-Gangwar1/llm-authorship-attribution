@@ -4,7 +4,8 @@ emoji: 🕵️
 colorFrom: indigo
 colorTo: purple
 sdk: gradio
-sdk_version: 4.44.0
+sdk_version: 5.9.1
+python_version: "3.12"
 app_file: app.py
 pinned: false
 license: mit
@@ -20,10 +21,9 @@ Paste any text and the model predicts which of **12 LLMs** (or a human) wrote it
 - **Classes:** gpt2, gpt3, gpt4, chatgpt, llama-chat, mistral, mistral-chat, mpt, mpt-chat, cohere, cohere-chat, human
 
 ## How it works
-The Space loads the fine-tuned RoBERTa model from the Hugging Face Hub and runs
-inference on your input text, returning a probability distribution over all 12 classes.
+The Space loads the fine-tuned RoBERTa model
+([ArjunGangwar1/llm-authorship-roberta](https://huggingface.co/ArjunGangwar1/llm-authorship-roberta))
+from the Hugging Face Hub and runs inference on your input text, returning a
+probability distribution over all 12 classes.
 
-Set the `HF_MODEL_REPO` Space variable to your model repo
-(e.g. `your-username/llm-authorship-roberta`).
-
-Built for CS204T (Artificial Intelligence), IIT Dharwad.
+Code: [github.com/Arjun-Gangwar1/llm-authorship-attribution](https://github.com/Arjun-Gangwar1/llm-authorship-attribution)

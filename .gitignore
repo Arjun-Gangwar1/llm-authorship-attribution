@@ -106,3 +106,6 @@ uv.lock
 # ✅ .gitignore
 # Documentation folder (kept local, not on GitHub)
 docs/
+
+# Converted HF model export (475 MB — uploaded to HF Hub, not GitHub)
+hf_model_export/
