@@ -1,7 +1,12 @@
 # LLM Authorship Attribution — 12-Class Text Classification
 
+[![Live Demo](https://img.shields.io/badge/🤗%20Hugging%20Face-Live%20Demo-blue)](https://huggingface.co/spaces/ArjunGangwar1/llm-authorship-attribution)
+[![Model](https://img.shields.io/badge/🤗%20Model-RoBERTa%2086.5%25-orange)](https://huggingface.co/ArjunGangwar1/llm-authorship-roberta)
+
 > Given a raw text string, identify which of **12 LLMs (or a human)** wrote it.
 > Fine-tuned RoBERTa reaches **86.5% test accuracy** on 796,800 training samples.
+>
+> **▶ [Try the live demo](https://huggingface.co/spaces/ArjunGangwar1/llm-authorship-attribution)** — paste any text and see which model wrote it.
 
 Built for **CS204T: Artificial Intelligence**, IIT Dharwad (team project — see [my role](#my-role-arjun-gangwar) and [acknowledgments](#acknowledgments)).
 
